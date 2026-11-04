@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title> Yousaf Mallahi & Ayisha Farhana</title>
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Dancing+Script:wght@600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--g1:#0b4226;--g2:#06301a;--gold:#b8892b;--gold-l:#e6c978;--cream:#fdf6e9;--ink:#1b4d2e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--g1:#0b4226;--g2:#052816}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#06301a;min-height:100%;scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0,var(--g1),var(--g2) 70%) no-repeat;color:var(--cream);font-family:'PT Serif',serif;overflow-x:hidden}
+/* splash */
+#splash{position:fixed;inset:0;z-index:50;background:radial-gradient(circle at 50% 30%,#0f5a32,#042414);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;transition:transform 1s cubic-bezier(.7,0,.2,1),opacity .8s}
+#splash.open{transform:translateY(-100%);opacity:0;pointer-events:none}
+#splash svg{width:90px;margin-bottom:18px;animation:float 3s ease-in-out infinite}
+#splash .ar{font-family:Amiri,serif;font-size:30px;color:var(--gold-l)}
+#splash h2{font-family:'Dancing Script',cursive;font-size:44px;margin:8px 0;color:var(--gold-l)}
+#splash p{margin:0 0 26px;letter-spacing:3px;font-size:13px;text-transform:uppercase;opacity:.85}
+.btn{display:inline-block;border:1.5px solid var(--gold-l);color:var(--gold-l);background:transparent;padding:13px 28px;border-radius:999px;font:700 14px 'PT Serif',serif;letter-spacing:2px;text-decoration:none;cursor:pointer;transition:.3s}
+.btn:hover,.btn.fill{background:var(--gold-l);color:#0b3a20}
+.music-control{position:fixed;right:16px;bottom:16px;z-index:45}
+.music-toggle{display:grid;place-items:center;width:48px;height:48px;padding:0;border:1px solid var(--gold-l);border-radius:50%;background:#06301a;color:var(--gold-l);cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.music-toggle:hover{background:#0b4226}
+.music-toggle:focus-visible{outline:2px solid var(--cream);outline-offset:3px}
+.music-toggle svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.music-toggle .mute-slash{display:block}
+.music-toggle[aria-pressed="true"] .mute-slash{display:none}
+@keyframes float{50%{transform:translateY(-8px)}}
+/* invitation */
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:clamp(36px,7vh,72px) 24px 12px}
+.invitation{max-width:480px;margin:0 auto;padding:8px 0 24px;text-align:center;opacity:0;transform:translateY(12px);transition:opacity .8s,transform .8s}
+.invitation.show{opacity:1;transform:none}
+.invitation-ar{font-family:Amiri,serif;font-size:clamp(23px,6vw,30px);color:var(--gold-l);margin:0 0 18px}
+.invitation-title{margin:0;color:var(--gold-l);font-size:clamp(14px,3.5vw,17px);letter-spacing:.14em;text-transform:uppercase}
+.invitation-blessing{margin:8px 0 22px;font-size:14px}
+.invitation-name{margin:0;color:var(--gold-l);font-family:'Dancing Script','Segoe Script','Brush Script MT',cursive;font-size:clamp(36px,9vw,48px);font-weight:600;line-height:1.18}
+.invitation-family{margin:4px 0 0;font-size:13px;line-height:1.6;opacity:.9}
+.invitation-and{margin:8px 0;color:var(--gold-l);font-family:'Dancing Script',cursive;font-size:25px;font-style:italic}
+.invitation-message{max-width:380px;margin:28px auto 24px;font-size:15px;line-height:1.8}
+.invitation-thanks{margin:22px 0 0;font-size:13px;line-height:1.8}
+/* sections */
+section{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:44px 22px 8px;text-align:center}
+section h3{font-family:'Dancing Script',cursive;font-size:38px;font-weight:600;color:var(--gold-l);margin:0 0 6px}
+.orn{display:block;margin:4px auto 16px;width:132px}
+.scratch-reveal{position:relative;max-width:380px;margin:22px auto 18px;overflow:hidden;border:1px solid rgba(230,201,120,.5);border-radius:16px;background:rgba(255,255,255,.035);transition:opacity .55s,transform .55s}
+.scratch-date{padding:25px 16px;color:var(--gold-l);font-size:clamp(23px,6vw,30px);font-weight:700}
+.scratch-date span{display:block;margin-top:8px;color:var(--cream);font-size:14px;font-weight:400}
+.scratch-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+.scratch-canvas.revealed{opacity:0;transition:opacity .55s ease;pointer-events:none}
+.scratch-canvas:active{cursor:grabbing}
+.scratch-canvas:focus-visible{outline:3px solid var(--cream);outline-offset:-5px}
+.scratch-instruction{margin:0;font-size:13px;opacity:.85}
+.scratch-reveal.cleared{opacity:0;transform:scale(.96);pointer-events:none}
+#cd[hidden],#calendarLink[hidden]{display:none}
+body:not(.date-revealed) #venueSection,body:not(.date-revealed) #rsvpSection,body:not(.date-revealed) footer{display:none}
+.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}
+.cd div{border:1px solid rgba(230,201,120,.35);border-radius:12px;padding:14px 4px;background:rgba(255,255,255,.035)}
+.cd b{display:block;font-size:30px;color:var(--gold-l)}
+.cd span{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.8}
+.countdown-date{grid-column:1/-1;margin:2px 0 0;color:var(--gold-l);font-size:15px;letter-spacing:.5px}
+.panel{border:1px solid rgba(230,201,120,.35);border-radius:16px;padding:22px 18px;background:rgba(255,255,255,.035);line-height:1.8}
+.panel strong{color:var(--gold-l);font-size:20px;display:block}
+.btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:16px}
+footer{position:relative;z-index:1;text-align:center;padding:42px 20px 52px;font-size:14px;opacity:.85;line-height:1.8}
+.ring-target{position:relative;width:min(180px,50vw);height:clamp(64px,9vw,84px);margin:12px auto 0}
+.footer-credit{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:8px;font-size:12px}
+.instagram-link{display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center;color:var(--gold-l)}
+.instagram-link:hover{color:var(--cream)}
+.instagram-link svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rings{position:fixed;inset:0;z-index:0;pointer-events:none;--ring-size:clamp(52px,6vw,78px);--ring-left-x:0px;--ring-right-x:0px;--ring-y:0px}
+.rings svg{position:absolute;top:0;width:var(--ring-size);height:var(--ring-size);overflow:visible;opacity:.48}
+.ring-left{left:clamp(4px,3vw,36px);transform:translate(var(--ring-left-x),var(--ring-y))}
+.ring-right{right:clamp(4px,3vw,36px);transform:translate(var(--ring-right-x),var(--ring-y))}
+.rings circle{fill:none;stroke:var(--gold-l);stroke-width:5}
+.rings ellipse{fill:none;stroke:var(--cream);stroke-width:1;opacity:.65}
+.rings .gem{fill:var(--cream);fill-opacity:.6;stroke:var(--gold);stroke-width:1;stroke-opacity:.65}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.2,1)}.rv.show{opacity:1;transform:none}
+.rv>*:not(.rings){opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.rv.show>*:not(.rings){opacity:1;transform:none}
+.rv.show>*:nth-child(2){transition-delay:.08s}
+.rv.show>*:nth-child(3){transition-delay:.16s}
+.rv.show>*:nth-child(4){transition-delay:.24s}
+.rv.show>*:nth-child(5){transition-delay:.32s}
+.rv.show>*:nth-child(6){transition-delay:.4s}
+.invitation>*{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.invitation.show>*{opacity:1;transform:none}
+.invitation.show>*:nth-child(2){transition-delay:.08s}
+.invitation.show>*:nth-child(3){transition-delay:.16s}
+.invitation.show>*:nth-child(4){transition-delay:.24s}
+.invitation.show>*:nth-child(5){transition-delay:.32s}
+.invitation.show>*:nth-child(6){transition-delay:.4s}
+.invitation.show>*:nth-child(7){transition-delay:.48s}
+.invitation.show>*:nth-child(8){transition-delay:.56s}
+.invitation.show>*:nth-child(9){transition-delay:.64s}
+.date-revealed #cd,.date-revealed #calendarLink{animation:riseIn .65s ease both}
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ #splash,.invitation,.rv,.rv>*:not(.rings),.invitation>*,.scratch-reveal,.date-revealed #cd,.date-revealed #calendarLink{animation:none!important;transition:none!important;transform:none!important}
+ .ring-left{transform:translate(var(--ring-left-x),var(--ring-y)) rotate(-9deg)}
+ .ring-right{transform:translate(var(--ring-right-x),var(--ring-y)) rotate(9deg)}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true"><defs>
+<g id="dv" fill="none" stroke="#b8892b" stroke-width="2"><path d="M0 0H120M180 0H300"/><path d="M120 0C135-14 150-14 150 0C150 14 165 14 180 0"/><path d="M150-8L156 0L150 8L144 0Z" fill="#b8892b"/></g>
+</defs></svg>
+
+<div id="splash">
+  <svg viewBox="0 0 100 100">
+    <defs><mask id="crescent"><rect width="100" height="100" fill="#fff"/><circle cx="62" cy="44" r="29" fill="#000"/></mask></defs>
+    <circle cx="50" cy="50" r="34" fill="#e6c978" mask="url(#crescent)"/>
+    <path d="M72 32l3 8 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z" fill="#e6c978" transform="translate(-4 -2) scale(.85)"/>
+  </svg>
+  <div class="ar">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ</div>
+  <h2>You're Invited</h2>
+  <p>Yousaf Mallahi &amp; Ayisha Farhana</p>
+  <button class="btn" id="openBtn">Open Invitation</button>
+</div>
+<audio id="backgroundMusic" loop preload="none"></audio>
+<div class="music-control">
+  <button class="music-toggle" id="musicToggle" type="button" aria-label="Unmute background music" aria-pressed="false" title="Unmute background music">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path class="mute-slash" d="M3 3l18 18"/></svg>
+  </button>
+</div>
+
+<main class="wrap">
+  <article class="invitation">
+    <p class="invitation-ar" lang="ar">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ</p>
+    <h1 class="invitation-title">Wedding Invitation</h1>
+    <p class="invitation-blessing">With the blessings of Allah</p>
+    <h2 class="invitation-name">Yousaf Mallahi K T</h2>
+    <p class="invitation-family">Son of Naseema K T, K T House, Payyanakkal</p>
+    <p class="invitation-and">and</p>
+    <h2 class="invitation-name">Ayisha Farhana V P</h2>
+    <p class="invitation-family">Daughter of V P M Faisal, Chakkumkadavu, Aanamadu</p>
+    <p class="invitation-message">With gratitude to Allah, their families warmly invite you to share in the joy of their wedding and pray for barakah in their life together.</p>
+    <!--     <p class="invitation-thanks">With love and prayers Naseema K T &amp; Family<br>Bicheevi • Farhoodha • Shaheed • Ajmal Farhan<br>Hafis • Haya • Hasim</p> -->
+  </article>
+</main>
+
+<section class="rv" id="countdownSection">
+  <h3 id="countdownTitle">A Special Date Awaits</h3>
+  <svg class="orn" viewBox="0 0 300 20"><use href="#dv" transform="translate(0 10)"/></svg>
+  <div class="scratch-reveal" id="scratchReveal">
+    <div class="scratch-date">Friday • 25 December 2026<span>12:00 PM – 3:00 PM</span></div>
+    <canvas class="scratch-canvas" id="scratchCanvas" role="button" tabindex="0" aria-label="Scratch to reveal the wedding date" aria-describedby="scratchInstruction"></canvas>
+  </div>
+  <p class="scratch-instruction" id="scratchInstruction">Scratch the card to reveal the date</p>
+  <div class="cd" id="cd" hidden><div><b id="d">0</b><span>Days</span></div><div><b id="h">0</b><span>Hours</span></div><div><b id="m">0</b><span>Mins</span></div><div><b id="s">0</b><span>Secs</span></div><p class="countdown-date">Friday, 25 December 2026</p></div>
+  <a class="btn fill" id="calendarLink" hidden target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Wedding%20of%20Yousaf%20%26%20Ayisha%20Farhana&amp;dates=20261225T063000Z/20261225T093000Z&amp;location=Pallikandi%20G%20L%20P%20School">Add to Calendar</a>
+</section>
+
+<section class="rv" id="venueSection">
+  <h3>Venue</h3>
+  <svg class="orn" viewBox="0 0 300 20"><use href="#dv" transform="translate(0 10)"/></svg>
+  <div class="panel"><strong>Pallikandi G L P School</strong>Friday, 25 December 2026<br>12:00 PM – 3:00 PM
+  <div class="btns"><a class="btn fill" target="_blank" rel="noopener" href="https://share.google/Tet7Y3zKgO0iCujDX">Open in Maps</a></div></div>
+</section>
+
+<section class="rv" id="rsvpSection">
+  <h3>Will You Join Us?</h3>
+  <svg class="orn" viewBox="0 0 300 20"><use href="#dv" transform="translate(0 10)"/></svg>
+  <div class="panel">Your presence and prayers will make our day complete.
+  <div class="btns">
+   <!-- <a class="btn fill" target="_blank" rel="noopener" href="https://wa.me/919061901833?text=Assalamu%20Alaikkum%2C%20I%20will%20attend%20the%20wedding%20on%2025%20December%202026.">RSVP on WhatsApp</a> -->
+   <a class="btn" href="tel:+919061901833">Call 90619 01833</a>
+   <a class="btn" href="tel:+919645543774">Call 96455 43774</a>
+   <button class="btn" id="share">Share Invitation</button>
+  </div></div>
+</section>
+
+<footer class="rv">With love and prayers<br><b style="color:var(--gold-l)">Naseema K T &amp; Family</b><br>Bicheevi • Farhoodha • Shaheed • Ajmal Farhan • Hafis • Haya • Hasim
+  <div class="ring-target" id="ringTarget" aria-hidden="true"></div>
+  <div class="footer-credit">© 2026 ADIL ASLAM K V
+    <a class="instagram-link" href="https://www.instagram.com/aadil_kv/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Visit Adil Aslam K V on Instagram">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+    </a>
+  </div>
+</footer>
+<div class="rings" id="rings" role="img" aria-label="Two wedding rings gradually coming together">
+  <svg class="ring-left" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="29"/><ellipse cx="40" cy="40" rx="22" ry="28"/><path class="gem" d="M40 1L46 7L40 13L34 7Z"/></svg>
+  <svg class="ring-right" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="29"/><ellipse cx="40" cy="40" rx="22" ry="28"/></svg>
+</div>
+
+<script>
+  
+const $=id=>document.getElementById(id);
+$('openBtn').onclick=()=>{$('splash').classList.add('open');document.body.classList.add('in');startBackgroundMusic()};
+const MUSIC_URL='Original%20audio-PMHNPK.mp3';
+const backgroundMusic=$('backgroundMusic'),musicToggle=$('musicToggle');
+let musicReady=false;
+backgroundMusic.muted=true;
+function setMusicMuted(muted){
+  backgroundMusic.muted=muted;
+  musicToggle.setAttribute('aria-pressed',String(!muted));
+  musicToggle.setAttribute('aria-label',muted?'Unmute background music':'Mute background music');
+  musicToggle.title=muted?'Unmute background music':'Mute background music';
+}
+async function startBackgroundMusic(){
+  if(!MUSIC_URL)return;
+  if(!musicReady){backgroundMusic.src=MUSIC_URL;musicReady=true}
+  try{
+    setMusicMuted(false);
+    await backgroundMusic.play();
+  }catch(error){
+    setMusicMuted(true);
+    musicToggle.title='Could not play music. Check the audio URL.';
+    console.error('Background music playback failed:',error);
+  }
+}
+musicToggle.onclick=async()=>{
+  if(!MUSIC_URL)return;
+  if(!musicReady){backgroundMusic.src=MUSIC_URL;musicReady=true}
+  if(backgroundMusic.paused){await startBackgroundMusic();return}
+  setMusicMuted(!backgroundMusic.muted);
+};
+const T=new Date('2026-12-25T12:00:00+05:30').getTime();
+function tick(){let d=Math.max(0,T-Date.now());$('d').textContent=Math.floor(d/864e5);$('h').textContent=Math.floor(d/36e5%24);$('m').textContent=Math.floor(d/6e4%60);$('s').textContent=Math.floor(d/1e3%60)}
+const canvas=$('scratchCanvas'),ctx=canvas.getContext('2d',{willReadFrequently:true}),scratchCard=$('scratchReveal');
+let scratching=false,moveCount=0,countdownStarted=false;
+function drawScratchCard(){
+  const {width,height}=canvas.getBoundingClientRect(),scale=Math.min(window.devicePixelRatio||1,2);
+  canvas.width=Math.round(width*scale);canvas.height=Math.round(height*scale);
+  ctx.setTransform(scale,0,0,scale,0,0);ctx.globalCompositeOperation='source-over';
+  const gradient=ctx.createLinearGradient(0,0,width,height);
+  gradient.addColorStop(0,'#c49a3c');gradient.addColorStop(1,'#a87924');
+  ctx.fillStyle=gradient;ctx.fillRect(0,0,width,height);
+  ctx.strokeStyle='rgba(253,246,233,.2)';ctx.lineWidth=1;
+  for(let x=-height;x<width;x+=24){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+height,height);ctx.stroke()}
+  ctx.fillStyle='#fdf6e9';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='700 16px "PT Serif",serif';ctx.fillText('Scratch to reveal',width/2,height/2-9);
+  ctx.font='12px "PT Serif",serif';ctx.fillText('Use your finger or cursor',width/2,height/2+14);
+}
+function scratchAt(event){
+  const rect=canvas.getBoundingClientRect(),scaleX=canvas.width/rect.width,scaleY=canvas.height/rect.height;
+  ctx.globalCompositeOperation='destination-out';ctx.lineWidth=38;ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.lineTo((event.clientX-rect.left)*scaleX,(event.clientY-rect.top)*scaleY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo((event.clientX-rect.left)*scaleX,(event.clientY-rect.top)*scaleY);
+}
+function finishReveal(){
+  if(countdownStarted)return;
+  countdownStarted=true;
+  scratching=false;
+  $('scratchInstruction').hidden=true;
+  canvas.classList.add('revealed');
+  setTimeout(()=>{
+    setTimeout(()=>{
+      scratchCard.classList.add('cleared');
+      setTimeout(()=>{
+        scratchCard.remove();
+        $('countdownTitle').textContent='Counting Down to Our Day';
+        $('cd').hidden=false;
+        $('calendarLink').hidden=false;
+        document.body.classList.add('date-revealed');
+        ({height:fullPageHeight,ringTargetTop,ringTargetHeight}=measureFullPage());
+        updateRingProgress();
+        tick();
+        setInterval(tick,1000);
+      },550);
+    },5000);
+  },550);
+}
+function checkScratchProgress(){
+  const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+  let clear=0,total=0;
+  for(let i=3;i<pixels.length;i+=16){total++;if(pixels[i]<128)clear++}
+  if(clear/total>=.45)finishReveal();
+}
+canvas.addEventListener('pointerdown',event=>{if(countdownStarted)return;scratching=true;moveCount=0;canvas.setPointerCapture(event.pointerId);const rect=canvas.getBoundingClientRect();ctx.beginPath();ctx.moveTo((event.clientX-rect.left)*canvas.width/rect.width,(event.clientY-rect.top)*canvas.height/rect.height);scratchAt(event)});
+canvas.addEventListener('pointermove',event=>{if(!scratching)return;scratchAt(event);if(++moveCount%6===0)checkScratchProgress()});
+canvas.addEventListener('pointerup',()=>{if(scratching){scratching=false;checkScratchProgress()}});
+canvas.addEventListener('pointercancel',()=>{scratching=false});
+canvas.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();finishReveal()}});
+new ResizeObserver(drawScratchCard).observe(scratchCard);
+$('share').onclick=async()=>{const data={title:'Wedding Invitation',text:'You are invited to the wedding of Yousaf Mallahi & Ayisha Farhana – 25 December 2026',url:location.href};
+try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);$('share').textContent='Link Copied ✓'}}catch(e){}};
+const io=new IntersectionObserver(es=>es.forEach(e=>{e.target.classList.toggle('show',e.isIntersecting)}),{threshold:.15});
+document.querySelectorAll('.rv,.invitation').forEach(el=>io.observe(el));
+const rings=$('rings'),ringTarget=$('ringTarget'),reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+function measureFullPage(){
+  const isRevealed=document.body.classList.contains('date-revealed');
+  document.body.classList.add('date-revealed');
+  const height=document.documentElement.scrollHeight;
+  const targetRect=ringTarget.getBoundingClientRect();
+  const ringTargetTop=targetRect.top+window.scrollY;
+  const ringTargetHeight=targetRect.height;
+  if(!isRevealed)document.body.classList.remove('date-revealed');
+  return {height,ringTargetTop,ringTargetHeight};
+}
+let {height:fullPageHeight,ringTargetTop,ringTargetHeight}=measureFullPage();
+function updateRingProgress(){
+  const journey=Math.max(0,fullPageHeight-window.innerHeight);
+  const progress=reduceMotion.matches?1:journey>0?Math.max(0,Math.min(1,window.scrollY/journey)):1;
+  const size=Math.min(78,Math.max(52,window.innerWidth*.06));
+  const edge=Math.min(36,Math.max(4,window.innerWidth*.03));
+  const targetCenter=window.innerWidth/2;
+  const targetTop=ringTargetTop-journey+(ringTargetHeight-size)/2;
+  const leftEndX=targetCenter-size*.675-edge;
+  const rightEndX=targetCenter-size*.325-(window.innerWidth-edge-size);
+  rings.style.setProperty('--ring-left-x',`${leftEndX*progress}px`);
+  rings.style.setProperty('--ring-right-x',`${rightEndX*progress}px`);
+  rings.style.setProperty('--ring-y',`${targetTop*progress}px`);
+}
+window.addEventListener('scroll',updateRingProgress,{passive:true});
+window.addEventListener('resize',()=>{({height:fullPageHeight,ringTargetTop,ringTargetHeight}=measureFullPage());updateRingProgress()});
+reduceMotion.addEventListener('change',updateRingProgress);
+updateRingProgress();
+</script>
+</body>
+</html>
