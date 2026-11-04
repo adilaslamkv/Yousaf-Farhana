@@ -250,20 +250,18 @@ function finishReveal(){
   $('scratchInstruction').hidden=true;
   canvas.classList.add('revealed');
   setTimeout(()=>{
+    scratchCard.classList.add('cleared');
     setTimeout(()=>{
-      scratchCard.classList.add('cleared');
-      setTimeout(()=>{
-        scratchCard.remove();
-        $('countdownTitle').textContent='Counting Down to Our Day';
-        $('cd').hidden=false;
-        $('calendarLink').hidden=false;
-        document.body.classList.add('date-revealed');
-        ({height:fullPageHeight,ringTargetTop,ringTargetHeight}=measureFullPage());
-        updateRingProgress();
-        tick();
-        setInterval(tick,1000);
-      },550);
-    },5000);
+      scratchCard.remove();
+      $('countdownTitle').textContent='Counting Down to Our Day';
+      $('cd').hidden=false;
+      $('calendarLink').hidden=false;
+      document.body.classList.add('date-revealed');
+      ({height:fullPageHeight,ringTargetTop,ringTargetHeight}=measureFullPage());
+      updateRingProgress();
+      tick();
+      setInterval(tick,1000);
+    },550);
   },550);
 }
 function checkScratchProgress(){
